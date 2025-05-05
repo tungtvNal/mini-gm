@@ -14,7 +14,9 @@ export default defineNuxtConfig({
     "@tresjs/nuxt",
   ],
 
-  ui: {},
+  ui: {
+
+  },
 
   css: ["~/assets/css/main.css"],
 

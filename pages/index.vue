@@ -1,44 +1,48 @@
 <template>
-  <div class="container">
-    <div id="board" class="grid" :style="gridStyle">
+  <div class="flex flex-col items-center gap-4">
+    <!-- Board -->
+    <div id="board" class="grid border border-gray-300" :style="gridStyle">
       <div
         v-for="(cell, index) in flatGrid"
         :key="index"
-        class="cell"
+        class="w-full h-full"
         :style="{ backgroundColor: cell }"
       />
     </div>
 
-    <div id="controls" class="controls">
-      <button
+    <!-- Color Controls -->
+    <div id="controls" class="flex gap-2">
+      <UButton
         v-for="color in colors"
         :key="color"
-        class="color-button"
+        :ui="{ rounded: 'full', padding: 'none', size: 'md' }"
+        class="w-8 h-8"
         :style="{ backgroundColor: color }"
-        :data-color="color"
         :disabled="movesLeft === 0"
         @click="floodFill(color)"
       />
     </div>
 
-    <div id="status">{{ movesLeftText }}</div>
-    <div v-if="winningStreak > 0" id="winning-streak">
+    <!-- Moves Left -->
+    <UBadge color="blue" variant="solid" size="lg">
+      {{ movesLeftText }}
+    </UBadge>
+
+    <!-- Winning Streak -->
+    <UBadge v-if="winningStreak > 0" color="green" variant="soft" size="lg">
       {{ winningStreakText }} {{ winningStreak }}
+    </UBadge>
+
+    <!-- Action Buttons -->
+    <div class="flex gap-2">
+      <UButton color="primary" @click="initGame">
+        {{ texts.NEW_BUTTON }}
+      </UButton>
+      <UButton color="gray" @click="showHelp = true">Help</UButton>
     </div>
 
-    <button id="new-button" @click="initGame">New Game</button>
-    <button id="help-button" @click="showHelp = true">Help</button>
-
-    <div v-if="showHelp" id="help-container" class="modal">
-      <h2>{{ texts.HELP_TITLE }}</h2>
-      <p>{{ texts.HELP_DESCRIPTION }}</p>
-      <p>{{ texts.HELP_OBJECTIVE }}</p>
-      <p>{{ texts.HELP_INSTRUCTIONS }}</p>
-      <p>{{ texts.HELP_CONTROLS }}</p>
-      <button id="back-button" @click="showHelp = false">
-        {{ texts.BACK_BUTTON }}
-      </button>
-    </div>
+    <!-- Help Modal -->
+    <HelpModal v-model:open-model="showHelp" :texts="texts" />
   </div>
 </template>
 
@@ -122,18 +126,13 @@ const floodFill = (newColor) => {
   movesLeft.value--;
 
   if (checkWin()) {
-    // statusText.value = texts.WIN_MESSAGE(movesLeft.value);
     winningStreak.value++;
   } else if (movesLeft.value === 0) {
-    // statusText.value = texts.LOSS_MESSAGE;
     winningStreak.value = 0;
   }
 };
 
 const checkWin = () => {
-  // console.log(
-  //   grid.value.every((row) => row.every((cell) => cell === grid.value[0][0]))
-  // );
   return grid.value.every((row) =>
     row.every((cell) => cell === grid.value[0][0])
   );
@@ -148,43 +147,10 @@ onMounted(() => {
 </script>
 
 <style scoped>
-.container {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 1rem;
-}
 #board {
   min-width: 400px;
   width: 20vw;
   aspect-ratio: 12 / 16;
-}
-.grid {
-  display: grid;
   gap: 1px;
-  border: 1px solid #ccc;
-}
-.cell {
-  width: 100%;
-  height: 100%;
-}
-.controls {
-  display: flex;
-  gap: 0.5rem;
-}
-.color-button {
-  width: 30px;
-  height: 30px;
-  border: none;
-  cursor: pointer;
-}
-.modal {
-  border: 1px solid #ccc;
-  padding: 1rem;
-  background: white;
-  position: fixed;
-  top: 10%;
-  max-width: 400px;
-  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
 }
 </style>
