@@ -6,6 +6,7 @@ const getLocalStorage = (key: string) => {
 
   return null;
 };
+
 const setLocalStorage = (key: string, value: unknown) => {
   // window.localStorage.setItem(key, JSON.stringify(value));
   if (typeof window !== "undefined") {

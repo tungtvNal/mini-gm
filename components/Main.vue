@@ -67,8 +67,8 @@ const capitalize = (text) => text.charAt(0).toUpperCase() + text.slice(1);
 
 <template>
   <div class="main-menu">
-    <img class="logo-ball" :src="LogoBall" />
-    <img class="wordmark" :src="Wordmark" />
+    <img class="logo-ball" :src="LogoBall" >
+    <img class="wordmark" :src="Wordmark" >
 
     <div class="main-menu-button" @click="startGame">Play</div>
 
