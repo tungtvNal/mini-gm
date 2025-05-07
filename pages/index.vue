@@ -76,8 +76,8 @@ const controlsRef = ref<null>(null);
 
 const getCameraPosition = () => {
   return window.innerWidth < 768
-    ? new Vector3(0, 45, 0)
-    : new Vector3(0, 25, 0);
+    ? new Vector3(0, 40, 0)
+    : new Vector3(0, 20, 0);
 };
 
 const cameraPosition = ref(getCameraPosition());
