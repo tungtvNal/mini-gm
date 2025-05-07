@@ -6,7 +6,7 @@
         :position="cameraPosition"
         :look-at="[0, 0, 0]"
       />
-      <OrbitControls ref="controlsRef" />
+      <OrbitControls ref="controlsRef" :min-distance="25" :max-distance="50" />
       <TresAmbientLight :intensity="1" />
       <TresDirectionalLight :position="[10, 10, 10]" :intensity="1" />
       <TresGroup>
@@ -44,6 +44,7 @@
       <div class="flex gap-2">
         <UButton @click="initGame">New Game</UButton>
         <UButton color="info" @click="showHelp = true">Help</UButton>
+        <UButton v-if="!!gridHistory.length" @click="undo"> ⬅️ Back </UButton>
       </div>
     </div>
     <HelpModal v-model:open-model="showHelp" :texts="texts" />
@@ -59,9 +60,11 @@ import type { PerspectiveCamera } from "three";
 
 const {
   flatGrid,
+  gridHistory,
   colors,
   floodFill,
   initGame,
+  undo,
   movesLeft,
   isWin,
   showHelp,

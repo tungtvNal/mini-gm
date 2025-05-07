@@ -13,6 +13,7 @@ type Cell = {
 };
 
 export const useFloodGame = () => {
+  const gridHistory = ref<Cell[][][]>([]);
   const grid = ref<Cell[][]>([]);
   const movesLeft = ref(MAX_MOVES);
   const isWin = ref(false);
@@ -50,11 +51,29 @@ export const useFloodGame = () => {
     grid.value = generateGrid();
     movesLeft.value = MAX_MOVES;
     isWin.value = false;
-  }
+  };
+
+  const saveHistory = () => {
+    // Save the current grid state to history
+    const snapshot = grid.value.map(row => row.map(cell => ({ ...cell })))
+    gridHistory.value.push(snapshot);
+  };
+
+  const undo = () => {
+    // Undo the last move
+    if (gridHistory.value.length === 0) return;
+    const previous = gridHistory.value.pop();
+    grid.value = previous?.map((row) => [...row]) || grid.value;
+    movesLeft.value++;
+    isWin.value = false;
+  };
 
   const floodFill = (newColor: string) => {
     const oldColor = grid.value[0][0].color;
     if (newColor === oldColor || movesLeft.value <= 0) return;
+
+    // Save the current grid state before changing it
+    saveHistory();
 
     const visited = new Set<string>();
 
@@ -85,10 +104,11 @@ export const useFloodGame = () => {
     if (grid.value.flat().every((c) => c.color === newColor)) {
       isWin.value = true;
     }
-  }
+  };
 
   return {
     flatGrid,
+    gridHistory,
     colors: COLORS,
     movesLeft,
     isWin,
@@ -98,5 +118,6 @@ export const useFloodGame = () => {
     HEIGHT,
     floodFill,
     initGame,
+    undo,
   };
 };
