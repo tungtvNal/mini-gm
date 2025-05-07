@@ -14,11 +14,16 @@ export default defineNuxtConfig({
     "@tresjs/nuxt",
   ],
 
-  ui: {
-
-  },
+  ui: {},
 
   css: ["~/assets/css/main.css"],
 
   ssr: false,
+  // nitro: {
+  //   static: true,
+  // },
+  // app: {
+  //   baseURL: "./",
+  // },
+  experimental: { appManifest: false },
 });
