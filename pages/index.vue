@@ -3,7 +3,7 @@
     <TresCanvas window-size clear-color="#82DBC5">
       <TresPerspectiveCamera
         ref="cameraRef"
-        :position="initialCameraPosition"
+        :position="cameraPosition"
         :look-at="[0, 0, 0]"
       />
       <OrbitControls ref="controlsRef" />
@@ -74,21 +74,37 @@ const cameraRef = ref<PerspectiveCamera | null>(null);
 
 const controlsRef = ref<null>(null);
 
-const initialCameraPosition = new Vector3(0, 25, 0);
-// const initialTarget = new Vector3(0, 0, 0);
+const getCameraPosition = () => {
+  return window.innerWidth < 768
+    ? new Vector3(0, 45, 0)
+    : new Vector3(0, 25, 0);
+};
+
+const cameraPosition = ref(getCameraPosition());
 
 const resetCamera = () => {
   if (cameraRef.value && controlsRef.value) {
-    cameraRef.value.position.copy(initialCameraPosition);
+    cameraRef.value.position.copy(cameraPosition.value);
   }
+};
+
+const handleResize = () => {
+  cameraPosition.value = getCameraPosition();
 };
 
 onMounted(() => {
   initGame();
 
+  window.addEventListener("resize", handleResize);
+
   window.addEventListener("keydown", (e) => {
     if (e.code === "KeyN") initGame();
     resetCamera();
   });
+});
+
+onUnmounted(() => {
+  // Cleanup event listeners
+  window.removeEventListener("resize", handleResize);
 });
 </script>
