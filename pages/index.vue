@@ -1,32 +1,9 @@
 <template>
-  <div class="flex flex-col items-center gap-4 relative">
-    <TresCanvas window-size clear-color="#82DBC5">
-      <TresPerspectiveCamera
-        ref="cameraRef"
-        :position="cameraPosition"
-        :look-at="[0, 0, 0]"
-      />
-      <OrbitControls ref="controlsRef" :min-distance="25" :max-distance="50" />
-      <TresAmbientLight :intensity="1" />
-      <TresDirectionalLight :position="[10, 10, 10]" :intensity="1" />
-      <TresGroup>
-        <Block3D
-          v-for="(cell, index) in flatGrid"
-          :key="index"
-          :color="cell.color"
-          :x="cell.x"
-          :y="cell.y"
-          :height="cell.height"
-          :width-offset="WIDTH / 2"
-          :height-offset="HEIGHT / 2"
-        />
-      </TresGroup>
-    </TresCanvas>
-
+  <div class="bg-black min-h-screen flex flex-col items-center">
     <div
-      class="absolute top-0 left-0 right-0 flex flex-col gap-1 justify-center items-center p-2 shadow-2xl bg-[#11172A]"
+      class="flex flex-col gap-2 justify-center items-center p-4 shadow-2xl bg-[#11172A] w-full"
     >
-      <div class="flex gap-2">
+      <div class="flex flex-wrap justify-center gap-2">
         <UButton
           v-for="color in colors"
           :key="color"
@@ -36,27 +13,37 @@
         />
       </div>
 
-      <div class="text-center text-gray-600">
-        <p>{{ movesLeft }} moves left</p>
-        <p v-if="isWin" class="text-green-600 font-bold">🎉 You win!</p>
+      <div class="text-center text-gray-400 text-sm md:text-base">
+        <p>Số lượt còn lại: {{ movesLeft }}</p>
+        <p v-if="isWin" class="text-green-500 font-bold">🎉 Chiến thắng!</p>
       </div>
 
-      <div class="flex gap-2">
-        <UButton @click="initGame">New Game</UButton>
-        <UButton color="info" @click="showHelp = true">Help</UButton>
-        <UButton v-if="!!gridHistory.length" @click="undo"> ⬅️ Back </UButton>
+      <div class="flex flex-wrap justify-center gap-2">
+        <UButton @click="initGame">Chơi mới</UButton>
+        <UButton color="info" @click="showHelp = true">Trợ giúp</UButton>
+        <UButton v-if="!!gridHistory.length && !isWin" @click="undo">↩️ Hoàn tác</UButton>
       </div>
     </div>
+
+    <div
+      id="board"
+      class="grid border border-gray-300 mt-10 w-full max-w-[90vw] sm:max-w-[400px] aspect-[12/16] gap-[1px] mx-auto"
+      :style="gridStyle"
+    >
+      <div
+        v-for="(cell, index) in flatGrid"
+        :key="index"
+        class="w-full h-full"
+        :style="{ backgroundColor: cell.color }"
+      />
+    </div>
+
     <HelpModal v-model:open-model="showHelp" :texts="texts" />
   </div>
 </template>
 
 <script setup lang="ts">
-import { Vector3 } from "three";
-import Block3D from "~/components/Block3D.vue";
 import { useFloodGame } from "~/composables/useFloodGame";
-
-import type { PerspectiveCamera } from "three";
 
 const {
   flatGrid,
@@ -69,45 +56,14 @@ const {
   isWin,
   showHelp,
   texts,
-  WIDTH,
-  HEIGHT,
+  gridStyle,
 } = useFloodGame();
-
-const cameraRef = ref<PerspectiveCamera | null>(null);
-
-const controlsRef = ref<null>(null);
-
-const getCameraPosition = () => {
-  return window.innerWidth < 768
-    ? new Vector3(0, 40, 0)
-    : new Vector3(0, 20, 0);
-};
-
-const cameraPosition = ref(getCameraPosition());
-
-const resetCamera = () => {
-  if (cameraRef.value && controlsRef.value) {
-    cameraRef.value.position.copy(cameraPosition.value);
-  }
-};
-
-const handleResize = () => {
-  cameraPosition.value = getCameraPosition();
-};
 
 onMounted(() => {
   initGame();
 
-  window.addEventListener("resize", handleResize);
-
   window.addEventListener("keydown", (e) => {
     if (e.code === "KeyN") initGame();
-    resetCamera();
   });
-});
-
-onUnmounted(() => {
-  // Cleanup event listeners
-  window.removeEventListener("resize", handleResize);
 });
 </script>

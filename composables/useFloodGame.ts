@@ -5,6 +5,8 @@ const HEIGHT = 12;
 const COLORS = ["#f87171", "#60a5fa", "#34d399", "#facc15", "#a78bfa"];
 const MAX_MOVES = 22;
 
+const GRID_SIZE = { width: 12, height: 13 };
+
 type Cell = {
   x: number;
   y: number;
@@ -20,18 +22,17 @@ export const useFloodGame = () => {
   const showHelp = ref(false);
 
   const texts = {
-    NEW_BUTTON: "New Game",
-    HELP_TITLE: "Help",
-    HELP_DESCRIPTION: "Fill the entire board with a single color.",
-    HELP_OBJECTIVE:
-      "Match all the blocks with the same color within limited moves.",
-    HELP_INSTRUCTIONS: "Click a color to flood from the top-left.",
-    HELP_CONTROLS: "Use the buttons or press N for a new game.",
-    BACK_BUTTON: "Back",
-    MOVES_LEFT: (moves: number) => `Moves left: ${moves}`,
-    WIN_MESSAGE: (moves: number) => `You win! Moves left: ${moves}`,
-    LOSS_MESSAGE: "You lose! Try again.",
-    WINNING_STREAK: "Winning streak:",
+    NEW_BUTTON: "Chơi mới",
+    HELP_TITLE: "Trợ giúp",
+    HELP_DESCRIPTION: "Lấp đầy bảng bằng một màu duy nhất.",
+    HELP_OBJECTIVE: "Khớp tất cả khối cùng màu trong số lượt giới hạn.",
+    HELP_INSTRUCTIONS: "Nhấp vào nút màu (🟥 🟦 🟩 🟨 🟪) ở trên để lan tỏa từ góc trên bên trái.",
+    HELP_CONTROLS: "Dùng nút hoặc nhấn N để chơi mới.",
+    BACK_BUTTON: "Quay lại",
+    MOVES_LEFT: (moves: number) => `Số lượt còn lại: ${moves}`,
+    WIN_MESSAGE: (moves: number) => `Chiến thắng! Số lượt còn lại: ${moves}`,
+    LOSS_MESSAGE: "Thua rồi! Thử lại nhé.",
+    WINNING_STREAK: "Chuỗi chiến thắng:",
   };
 
   const generateGrid = (): Cell[][] => {
@@ -47,15 +48,20 @@ export const useFloodGame = () => {
 
   const flatGrid = computed(() => grid.value.flat());
 
+  const gridStyle = computed(() => ({
+    gridTemplateColumns: `repeat(${GRID_SIZE.width}, 1fr)`,
+  }));
+
   const initGame = () => {
     grid.value = generateGrid();
     movesLeft.value = MAX_MOVES;
     isWin.value = false;
+    gridHistory.value = [];
   };
 
   const saveHistory = () => {
     // Save the current grid state to history
-    const snapshot = grid.value.map(row => row.map(cell => ({ ...cell })))
+    const snapshot = grid.value.map((row) => row.map((cell) => ({ ...cell })));
     gridHistory.value.push(snapshot);
   };
 
@@ -116,6 +122,7 @@ export const useFloodGame = () => {
     texts,
     WIDTH,
     HEIGHT,
+    gridStyle,
     floodFill,
     initGame,
     undo,

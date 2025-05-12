@@ -2,7 +2,13 @@
 export default defineNuxtConfig({
   compatibilityDate: "2024-11-01",
   devtools: { enabled: false },
-
+  ssr: false,
+  app: {
+    baseURL: "./",
+  },
+  nitro: {
+    preset: "static",
+  },
   modules: [
     "@nuxt/ui",
     "@nuxt/content",
@@ -11,19 +17,9 @@ export default defineNuxtConfig({
     "@nuxt/image",
     "@nuxt/test-utils",
     "@pinia/nuxt",
-    "@tresjs/nuxt",
   ],
 
   ui: {},
 
   css: ["~/assets/css/main.css"],
-
-  ssr: false,
-  // nitro: {
-  //   static: true,
-  // },
-  // app: {
-  //   baseURL: "./",
-  // },
-  experimental: { appManifest: false },
 });
