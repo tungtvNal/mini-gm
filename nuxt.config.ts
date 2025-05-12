@@ -5,6 +5,13 @@ export default defineNuxtConfig({
   ssr: false,
   app: {
     baseURL: "./",
+    head: {
+      title: "Flood Fill",
+      htmlAttrs: {
+        lang: "en",
+      },
+      link: [{ rel: "icon", type: "image/x-icon", href: "/flood-fill.ico" }],
+    },
   },
   nitro: {
     preset: "static",
