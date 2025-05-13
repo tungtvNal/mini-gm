@@ -4,7 +4,7 @@
       <p>{{ texts.HELP_DESCRIPTION }}</p>
       <p>{{ texts.HELP_OBJECTIVE }}</p>
       <p>{{ texts.HELP_INSTRUCTIONS }}</p>
-      <p>{{ texts.HELP_CONTROLS }}</p>
+      <!-- <p>{{ texts.HELP_CONTROLS }}</p> -->
     </template>
   </UModal>
 </template>

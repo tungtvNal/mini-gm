@@ -18,6 +18,7 @@ export const useFloodGame = () => {
   const gridHistory = ref<Cell[][][]>([]);
   const grid = ref<Cell[][]>([]);
   const movesLeft = ref(MAX_MOVES);
+  const winningStreak = ref(0);
   const isWin = ref(false);
   const showHelp = ref(false);
 
@@ -26,14 +27,17 @@ export const useFloodGame = () => {
     HELP_TITLE: "Trợ giúp",
     HELP_DESCRIPTION: "Lấp đầy bảng bằng một màu duy nhất.",
     HELP_OBJECTIVE: "Khớp tất cả khối cùng màu trong số lượt giới hạn.",
-    HELP_INSTRUCTIONS: "Nhấp vào nút màu (🟥 🟦 🟩 🟨 🟪) ở trên để lan tỏa từ góc trên bên trái.",
-    HELP_CONTROLS: "Dùng nút hoặc nhấn N để chơi mới.",
+    HELP_INSTRUCTIONS:
+      "Nhấp vào nút màu (🟥 🟦 🟩 🟨 🟪) ở trên để lan tỏa từ góc trên bên trái.",
+    // HELP_CONTROLS: "Bấm nút chơi mới hoặc nhấn N để chơi mới.",
     BACK_BUTTON: "Quay lại",
     MOVES_LEFT: (moves: number) => `Số lượt còn lại: ${moves}`,
     WIN_MESSAGE: (moves: number) => `Chiến thắng! Số lượt còn lại: ${moves}`,
     LOSS_MESSAGE: "Thua rồi! Thử lại nhé.",
-    WINNING_STREAK: "Chuỗi chiến thắng:",
+    WINNING_STREAK: "Chuỗi chiến thắng 🎉:",
   };
+
+  const winningStreakText = texts.WINNING_STREAK;
 
   const generateGrid = (): Cell[][] => {
     return Array.from({ length: HEIGHT }, (_, y) =>
@@ -109,6 +113,9 @@ export const useFloodGame = () => {
 
     if (grid.value.flat().every((c) => c.color === newColor)) {
       isWin.value = true;
+      winningStreak.value++;
+    } else {
+      winningStreak.value = 0;
     }
   };
 
@@ -117,6 +124,8 @@ export const useFloodGame = () => {
     gridHistory,
     colors: COLORS,
     movesLeft,
+    winningStreak,
+    winningStreakText,
     isWin,
     showHelp,
     texts,

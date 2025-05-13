@@ -15,7 +15,9 @@
 
       <div class="text-center text-gray-400 text-sm md:text-base">
         <p>Số lượt còn lại: {{ movesLeft }}</p>
-        <p v-if="isWin" class="text-green-500 font-bold">🎉 Chiến thắng!</p>
+        <p v-if="winningStreak > 0" class="text-green-500 font-bold">
+          {{ winningStreakText }} {{ winningStreak }}
+        </p>
       </div>
 
       <div class="flex flex-wrap justify-center gap-2">
@@ -53,6 +55,8 @@ const {
   initGame,
   undo,
   movesLeft,
+  winningStreak,
+  winningStreakText,
   isWin,
   showHelp,
   texts,
