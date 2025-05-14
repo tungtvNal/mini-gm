@@ -1,7 +1,7 @@
 import { ref, computed } from "vue";
 
 const WIDTH = 12;
-const HEIGHT = 12;
+const HEIGHT = 13;
 const COLORS = ["#f87171", "#60a5fa", "#34d399", "#facc15", "#a78bfa"];
 const MAX_MOVES = 22;
 
@@ -85,36 +85,62 @@ export const useFloodGame = () => {
     // Save the current grid state before changing it
     saveHistory();
 
-    const visited = new Set<string>();
+    const rows = HEIGHT;
+    const cols = WIDTH;
+    const gridData = grid.value;
 
-    const fill = (x: number, y: number) => {
+    // Create a boolean array that keeps track of visited cells
+    const visited = Array.from({ length: rows }, () => Array(cols).fill(false));
+
+    // Queue for BFS
+    const queue: { x: number; y: number }[] = [];
+    queue.push({ x: 0, y: 0 });
+
+    // Define the directions of movement
+    const directions = [
+      { dx: 1, dy: 0 }, // right
+      { dx: -1, dy: 0 }, // left
+      { dx: 0, dy: 1 }, // below
+      { dx: 0, dy: -1 }, // above
+    ];
+
+    while (queue.length > 0) {
+      const { x, y } = queue.shift()!;
+
+      // check stop condition
       if (
         x < 0 ||
         y < 0 ||
-        x >= WIDTH ||
-        y >= HEIGHT ||
-        grid.value[y][x].color !== oldColor ||
-        visited.has(`${x},${y}`)
+        x >= cols ||
+        y >= rows ||
+        gridData[y][x].color !== oldColor ||
+        visited[y][x]
       )
-        return;
+        continue;
 
-      visited.add(`${x},${y}`);
-      grid.value[y][x].color = newColor;
-      grid.value[y][x].height = 1.2 + Math.random() * 0.5;
+      // Mark visited cell and change color
+      visited[y][x] = true;
+      gridData[y][x].color = newColor;
+      gridData[y][x].height = 1.2 + Math.random() * 0.5;
 
-      fill(x + 1, y);
-      fill(x - 1, y);
-      fill(x, y + 1);
-      fill(x, y - 1);
-    };
+      // Add neighboring cells to the queue
+      for (const { dx, dy } of directions) {
+        const newX = x + dx;
+        const newY = y + dy;
+        queue.push({ x: newX, y: newY });
+      }
+    }
 
-    fill(0, 0);
     movesLeft.value--;
 
-    if (grid.value.flat().every((c) => c.color === newColor)) {
+    // Check win
+    const allFilled = gridData.every((row) =>
+      row.every((cell) => cell.color === newColor)
+    );
+    if (allFilled) {
       isWin.value = true;
       winningStreak.value++;
-    } else {
+    } else if (movesLeft.value === 0) {
       winningStreak.value = 0;
     }
   };

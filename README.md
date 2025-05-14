@@ -1,6 +1,18 @@
-# Nuxt Minimal Starter
+# Pixelated
 
-Look at the [Nuxt documentation](https://nuxt.com/docs/getting-started/introduction) to learn more.
+![Pixelated Logo](./assets/images/flood-fill.png)
+
+An addictive game of strategy and color!
+
+## About
+
+Pixelated is a puzzle-based strategy game that requires a mix of skill and luck. The objective is to change the color of the squares until the entire screen is a single solid color.
+
+![Screenshot](./assets/images/screenshot.png)
+
+## How To Play
+
+Starting with the square in the upper left corner you can change the color of the blocks in order to match that of the surrounding squares. This is done repeatedly until the entire screen is one color. The goal is to clear the screen in as few moves as possible. You must do so in under 22 moves to win. The game is controlled by the color buttons at the bottom of the screen.
 
 ## Setup
 
@@ -71,5 +83,3 @@ yarn preview
 # bun
 bun run preview
 ```
-
-Check out the [deployment documentation](https://nuxt.com/docs/getting-started/deployment) for more information.

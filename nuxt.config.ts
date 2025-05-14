@@ -6,7 +6,7 @@ export default defineNuxtConfig({
   app: {
     baseURL: "./",
     head: {
-      title: "Flood Fill",
+      title: "Pixelated",
       htmlAttrs: {
         lang: "en",
       },
